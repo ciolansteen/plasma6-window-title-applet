@@ -7,24 +7,8 @@ function match(pat, str) {
     return rgx.test(str)
 }
 
-// Prefer the parsed discoveredAppName (extracted by PlasmaTasksModel.qml)
-// when available; otherwise fall back to appName.
-function getAppNameForSubstitution() {
-    // discoveredAppName is set in PlasmaTasksModel.qml.cleanupTitle()
-    if (activeTaskItem?.discoveredAppName && activeTaskItem.discoveredAppName.trim() !== "") {
-        console.log("discoveredAppName: " + activeTaskItem.discoveredAppName);
-        console.log("appName: " + activeTaskItem.appName);
-        console.log("title: " + activeTaskItem.title);
-        console.log("fullName: " + activeTaskItem.fullName);
-        console.log("activityName: " + fullActivityInfo.name);
-        return activeTaskItem.appName;
-    }
-    // fallback to whichever appName is available
-    return activeTaskItem?.appName ?? "";
-}
-
 function sub(str) {
-    const appName = getAppNameForSubstitution();
+    const appName = activeTaskItem?.appName ?? "";
     const winTitle = activeTaskItem?.title ?? "";
     return str
         .replace("%a", appName)
@@ -37,7 +21,7 @@ function substitute() {
 
     // Use discoveredAppName first so Chrome/Chromium show "Google Chrome"
     // instead of the active tab title.
-    let appName = getAppNameForSubstitution();
+    let appName = activeTaskItem?.appName ?? "";
     let title = activeTaskItem?.title ?? "";
     let text = appName === title ? cfg.txtSameFound : cfg.txt
 
